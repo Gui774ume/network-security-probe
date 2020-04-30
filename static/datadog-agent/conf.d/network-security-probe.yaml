@@ -1,0 +1,8 @@
+##Log section
+logs:
+  - type: udp
+    port: 10518
+    service: network-security-probe
+    source: network-security-probe
+    tags:
+      - network-security-probe:event

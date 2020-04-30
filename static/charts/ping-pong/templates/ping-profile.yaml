@@ -1,0 +1,116 @@
+kind: SecurityProfile
+apiVersion: securityprobe.datadoghq.com/v1
+metadata:
+  name: ping-profile
+  labels:
+    app: ping
+
+spec:
+  attacks:
+    - arp-spoofing
+
+  actions:
+    # - ignore
+    - alert
+    # - enforce
+    # - trace-dns
+
+  processes:
+    - path: "/usr/local/bin/go-ping"
+      network:
+        egress:
+          fqdns:
+            - pong.default.svc.cluster.local.default.svc.cluster.local
+            - pong.default.svc.cluster.local.svc.cluster.local
+            - pong.default.svc.cluster.local.cluster.local
+            - pong.default.svc.cluster.local
+          cidr4:
+            - 10.96.0.10/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocolPorts:
+              - protocol: udp
+                port: 53
+              - protocol: tcp
+                port: 80
+          l7:
+            protocols: [dns, http]
+            dns:
+              - pong.default.svc.cluster.local.default.svc.cluster.local
+              - pong.default.svc.cluster.local.svc.cluster.local
+              - pong.default.svc.cluster.local.cluster.local
+              - pong.default.svc.cluster.local
+        ingress:
+          cidr4:
+            - 10.96.0.10/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocols: [tcp]
+            protocolPorts:
+              - protocol: udp
+                port: 53
+          l7:
+            protocols: [dns, http]
+
+    - path: "/usr/local/bin/nspbench"
+      network:
+        egress:
+          fqdns:
+            - pong.default.svc.cluster.local.default.svc.cluster.local
+            - pong.default.svc.cluster.local.svc.cluster.local
+            - pong.default.svc.cluster.local.cluster.local
+            - pong.default.svc.cluster.local
+          cidr4:
+            - 10.96.0.10/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocolPorts:
+              - protocol: udp
+                port: 53
+              - protocol: tcp
+                port: 80
+          l7:
+            protocols: [dns, http]
+            dns:
+              - pong.default.svc.cluster.local.default.svc.cluster.local
+              - pong.default.svc.cluster.local.svc.cluster.local
+              - pong.default.svc.cluster.local.cluster.local
+              - pong.default.svc.cluster.local
+              - google.fr
+              - google.com
+              - facebook.com
+              - github.com
+              - cloudflare.com
+        ingress:
+          cidr4:
+            - 10.96.0.10/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocols: [tcp]
+            protocolPorts:
+              - protocol: udp
+                port: 53
+          l7:
+            protocols: [dns, http]
+
+  default:
+    egress:
+      cidr4:
+        - 0.0.0.0/0
+      l3:
+        protocols: [ipv4, ipv6, arp]
+      l4:
+        protocols: [icmp, icmpv6]
+    ingress:
+      cidr4:
+        - 0.0.0.0/0
+      cidr6:
+        - ff02:0000:0000:0000:0000:0000:0000:0002/100
+      l3:
+        protocols: [ipv4, ipv6, arp]
+      l4:
+        protocols: [icmp, icmpv6]

@@ -1,0 +1,143 @@
+kind: SecurityProfile
+apiVersion: securityprobe.datadoghq.com/v1
+metadata:
+  name: profile-example
+  labels:
+    image: debian
+
+spec:
+  attacks:
+    - arp-spoofing
+
+  actions:
+    - alert
+    - enforce
+    - trace-dns
+
+  default:
+    egress:
+      fqdns:
+        - google.fr
+        - twitter.com
+      cidr4:
+        - 0.0.0.0/0
+      l3:
+        protocols: [ipv4, ipv6, arp]
+      l4:
+        protocols: [icmp, icmpv6]
+    ingress:
+      cidr4:
+        - 0.0.0.0/0
+      cidr6:
+        - ff02:0000:0000:0000:0000:0000:0000:0002/100
+      l3:
+        protocols: [ipv4, ipv6, arp]
+      l4:
+        protocols: [icmp, icmpv6]
+
+  processes:
+    - path: "/usr/bin/python3"
+      network:
+        egress:
+          fqdns:
+            - www.google.fr
+          cidr4:
+            - 10.0.2.3/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocolPorts:
+              - protocol: udp
+                port: 53
+              - protocol: tcp
+                port: 80
+              - protocol: tcp
+                port: 443
+          l7:
+            protocols: [dns, http, https]
+            dns:
+              - www.google.fr
+        ingress:
+          cidr4:
+            - 10.0.2.3/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocolPorts:
+              - protocol: udp
+                port: 53
+              - protocol: tcp
+                port: 80
+              - protocol: tcp
+                port: 443
+          l7:
+            protocols: [dns, http, https]
+
+    # Allow apt-get update & install
+    - path: "/usr/lib/apt/methods/http"
+      network:
+        egress:
+          fqdns:
+            - deb.debian.org
+            - security.debian.org
+            - security-cdn.debian.org
+          cidr4:
+            - 10.0.2.3/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocolPorts:
+              - protocol: udp
+                port: 53
+              - protocol: tcp
+                port: 80
+          l7:
+            protocols: [http, dns]
+            dns:
+              - deb.debian.org
+              - security.debian.org
+              - security-cdn.debian.org
+        ingress:
+          cidr4:
+            - 10.0.2.3/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocolPorts:
+              - protocol: udp
+                port: 53
+              - protocol: tcp
+                port: 80
+          l7:
+            protocols: [http, dns]
+
+    - path: "/bin/ping"
+      network:
+        egress:
+          fqdns:
+            - google.fr
+            - facebook.fr
+          cidr4:
+            - 10.0.2.3/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocolPorts:
+              - protocol: udp
+                port: 53
+          l7:
+            protocols: [dns]
+            dns:
+              - google.fr
+              - facebook.fr
+        ingress:
+          cidr4:
+            - 10.0.2.3/32
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocolPorts:
+              - protocol: udp
+                port: 53
+          l7:
+            protocols: [dns]

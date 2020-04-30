@@ -1,0 +1,13 @@
+---
+# eBPF - eBPF tunning options
+ebpf:
+    perf_map_page_count: 128
+    kprobe_max_active: 128
+    maps_chanel_length: 1000
+
+# monitoring_options - Monitoring options
+monitoring_options:
+    network_monitor_tick: 1
+    dns_monitoring: true
+    network_interfaces_monitoring: true
+    connection_monitoring: true

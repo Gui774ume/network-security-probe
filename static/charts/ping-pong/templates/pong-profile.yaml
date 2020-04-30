@@ -1,0 +1,56 @@
+kind: SecurityProfile
+apiVersion: securityprobe.datadoghq.com/v1
+metadata:
+  name: pong-profile
+  labels:
+    app: pong
+
+spec:
+  attacks:
+    - arp-spoofing
+
+  actions:
+    # - ignore
+    - alert
+    # - enforce
+    # - trace-dns
+
+  processes:
+    - path: "/usr/local/bin/pong"
+      network:
+        egress:
+          cidr4:
+            - 0.0.0.0/0
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocols: [tcp]
+          l7:
+            protocols: [http]
+        ingress:
+          cidr4:
+            - 0.0.0.0/0
+          l3:
+            protocols: [ipv4]
+          l4:
+            protocols: [tcp]
+          l7:
+            protocols: [http]
+
+  default:
+    egress:
+      cidr4:
+        - 0.0.0.0/0
+      l3:
+        protocols: [ipv4, ipv6, arp]
+      l4:
+        protocols: [icmp, icmpv6]
+    ingress:
+      cidr4:
+        - 0.0.0.0/0
+      cidr6:
+        - ff02:0000:0000:0000:0000:0000:0000:0002/100
+      l3:
+        protocols: [ipv4, ipv6, arp]
+      l4:
+        protocols: [icmp, icmpv6]
