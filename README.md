@@ -85,12 +85,10 @@ There are two kinds of overhead that one needs to assess when using an eBPF-base
 
 We decided to focus our benchmarking efforts on the packets that we knew had the worst overhead: the DNS request and response packets. As we parse both DNS requests and responses in the kernel to match domain names, those packets are the ones that are the most delayed. We also wanted to compare our results with Cilium which has a different strategy when it comes to DNS packets: Cilium forwards the DNS traffic to a DNS proxy and performs the assessment in user-space. So how does the project compare with a production ready solution like Cilium?
 
-[benchmark]: documentation/sstic/ProcessLevelNetworkSecurityMonitoring/img/round-trip-time.png "Benchmark results"
-Average round trip time per domain (averaged over 5000 A record queries per domain). The test was performed on a Linux ubuntu-bionic 4.15.0-88-generic, 2 vCPUs, 8 Gb RAM.
+![Benchmark results](documentation/sstic/ProcessLevelNetworkSecurityMonitoring/img/round-trip-time.png)
+Average round trip time per domain (averaged over 5000 A record queries per domain). The test was performed on a Linux ubuntu-bionic 4.15.0-88-generic, 2 vCPUs, 8 Gb RAM. Keep in mind that Cilium has many more features than Network Security Probe, the point of the comparison is simply to assess the overhead of the project compared to a production ready solution.
 
-[cpu-ram]: documentation/sstic/ProcessLevelNetworkSecurityMonitoring/img/cpu-ram.png "CPU and RAM usage"
+![CPU and RAM usage](documentation/sstic/ProcessLevelNetworkSecurityMonitoring/img/cpu-ram.png)
 CPU and RAM usage of the user-space program over time.
-
-_Keep in mind that Cilium has a lot more features than Network Security Probe, the point of the comparison is simply to assess the overhead of the project compared to a production ready solution_
 
 Although more testing would definitely be required to accurately assess the overhead in a real word environment, those results seem to confirm that there are no red flags to mapping eBPF packets to processes and assessing each packet at runtime. The worst case overhead is around 400 microseconds which is about half of the overhead of Cilium. This seems to confirm that in-kernel DNS parsing is a good strategy performance wise (but keep in mind that our DNS support is only partial for now, DNS parsing without loops is hard). Also, keep in mind that the 400 microseconds is the worst case scenario for the packets requiring the most processing. Our benchmark revealed that the actual overhead for a normal packet is closer to 200 microseconds for our tool and 250 microseconds for Cilium. Either way, those overheads are acceptable in a production environment.
