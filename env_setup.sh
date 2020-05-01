@@ -66,17 +66,20 @@ sudo apt-get install -y docker-ce
 sudo groupadd docker
 sudo usermod -aG docker vagrant
 sudo service docker start
-sudo curl -L "https://github.com/docker/compose/releases/download/1.25.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.3/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 EOD
 
 vagrant reload
 
-echo "Installing helm"
+echo "Installing helm & kubectl"
 cat <<EOD | vagrant ssh
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
 EOD
 
 echo "Configuring env variables"
@@ -90,12 +93,13 @@ echo "Fixing permissions"
 cat <<EOD | vagrant ssh
 sudo chown vagrant /home/vagrant/go
 sudo chown vagrant /home/vagrant/go/src/
-sudo chown vagrant /home/vagrant/go/src/gitlab.com
+sudo chown vagrant /home/vagrant/go/src/github.com
 EOD
 
-echo "Add veth module"
+echo "Add veth module & install go-bindata"
 cat <<EOD | vagrant ssh
 sudo modprobe veth
+/usr/local/go/bin/go get -u github.com/jteeuwen/go-bindata/...
 EOD
 
 vagrant reload

@@ -34,7 +34,7 @@ build-ebpf:
 		-O2 -emit-llvm \
 		ebpf/main.c \
 		-c -o - | llc -march=bpf -filetype=obj -o ebpf/bin/probe.o
-	go-bindata -pkg probe -prefix "ebpf/bin" -modtime 1 -o "pkg/probe/probe.go" "ebpf/bin"
+	go-bindata -pkg probe -prefix "ebpf/bin" -o "pkg/probe/probe.go" "ebpf/bin"
 
 ci-build-image:
 	docker build -t $(EBPF_DOCKER_IMAGE) -f $(EBPF_DOCKER_FILE) .

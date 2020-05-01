@@ -10,7 +10,7 @@ The script `env_setup.sh` will setup a vagrant VM with the required dependencies
 1) Start a minikube cluster
 
 ```
-sudo minikube start --vm-driver=none
+sudo minikube start --vm-driver=none --kubernetes-version=1.17.0
 ```
 
 2) Vendor go dependencies

@@ -23,6 +23,7 @@ spec:
             - pong.default.svc.cluster.local.default.svc.cluster.local
             - pong.default.svc.cluster.local.svc.cluster.local
             - pong.default.svc.cluster.local.cluster.local
+            - pong.default.svc.cluster.local.home
             - pong.default.svc.cluster.local
           cidr4:
             - 10.96.0.10/32
@@ -40,6 +41,7 @@ spec:
               - pong.default.svc.cluster.local.default.svc.cluster.local
               - pong.default.svc.cluster.local.svc.cluster.local
               - pong.default.svc.cluster.local.cluster.local
+              - pong.default.svc.cluster.local.home
               - pong.default.svc.cluster.local
         ingress:
           cidr4:
