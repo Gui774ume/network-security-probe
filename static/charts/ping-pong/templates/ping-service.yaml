@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.deployments.pingName }}
+spec:
+  type: {{ .Values.services.type }}
+  selector:
+    app: {{ .Values.deployments.pingName }}
+  ports:
+    - port: {{ .Values.deployments.pingPort }}

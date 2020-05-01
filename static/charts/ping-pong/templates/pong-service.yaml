@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.deployments.pongName }}
+spec:
+  type: {{ .Values.services.type }}
+  selector:
+    app: {{ .Values.deployments.pongName }}
+  ports:
+    - port: {{ .Values.deployments.pongPort }}

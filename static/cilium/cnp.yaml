@@ -1,0 +1,36 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "fqdn"
+spec:
+  endpointSelector:
+    matchLabels:
+      org: empire
+      class: mediabot
+  egress:
+  - toFQDNs:
+    - matchName: "mediabot-pong.default.svc.cluster.local"
+    - matchName: "mediabot.default.svc.cluster.local"
+    - matchName: "google.fr"
+    - matchName: "google.com"
+    - matchName: "facebook.com"
+    - matchName: "github.com"
+    - matchName: "cloudflare.com"
+  - fromEndpoints:
+    - matchLabels:
+        org: empire
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
+  - toEndpoints:
+    - matchLabels:
+        "k8s:io.kubernetes.pod.namespace": kube-system
+        "k8s:k8s-app": kube-dns
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: ANY
+      rules:
+        dns:
+        - matchPattern: "*"

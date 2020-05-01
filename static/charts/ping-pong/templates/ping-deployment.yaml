@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployments.pingName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.deployments.pingName }}
+  template:
+    metadata:
+      name: {{ .Values.deployments.pingName }}
+      labels:
+        app: {{ .Values.deployments.pingName }}
+    spec:
+      containers:
+      - name: {{ .Values.deployments.pingName }}
+        image: "{{ .Values.deployments.pingImage }}:{{ .Values.deployments.pingTag }}"
+        imagePullPolicy: {{ .Values.deployments.imagePullPolicy }}
+        command:
+          - "entrypoint.sh"
+          - "go-ping"
+          - "-pong"
+          - "http://pong.default.svc.cluster.local/task"
+          - "-agent"
+          - {{ .Values.apmAgentURL }}

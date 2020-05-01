@@ -1,0 +1,23 @@
+# Default values
+deployments:
+  # Pong
+  pongName: pong
+  pongImage: pong
+  pongTag: latest
+  pongPort: 80
+  # Ping
+  pingName: ping
+  pingImage: ping
+  pingTag: latest
+  pingPort: 80
+  #  Utils
+  utilsName: attacker
+  utilsImage: attacker
+  utilsTag: latest
+  # Generic
+  imagePullPolicy: Never
+
+services:
+  type: ClusterIP
+
+apmAgentURL: 172.17.0.1:8126

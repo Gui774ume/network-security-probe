@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployments.utilsName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.deployments.utilsName }}
+  template:
+    metadata:
+      name: {{ .Values.deployments.utilsName }}
+      labels:
+        app: {{ .Values.deployments.utilsName }}
+    spec:
+      containers:
+      - name: {{ .Values.deployments.utilsName }}
+        image: "{{ .Values.deployments.utilsImage }}:{{ .Values.deployments.utilsTag }}"
+        imagePullPolicy: {{ .Values.deployments.imagePullPolicy }}
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
